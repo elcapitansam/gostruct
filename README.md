@@ -5,7 +5,7 @@ Golang data (de)serialization package in the style of Python's struct module.
 
 ### Pack(fmt string, buf []byte, args ...interface{}) error
 
-Pack serializes data into the provided []byte buffer according to the fmt string.  Errors occur when the buffer supplied is too small for the requested serialization, a request is made to embed a Pascal string larger than 255 bytes, and when unknown format types are requested.
+Pack serializes data into the provided []byte buffer according to the fmt string.
 
 ### Unpack(fmt string, buf []byte) ([]interface{}, error)
 
