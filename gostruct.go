@@ -56,7 +56,7 @@ func atoi(s string) (int, int) {
 func packarg(buf []byte, vfmt byte, arg interface{}, encLE bool) (int, error) {
 	rv := 0
 	switch vfmt {
-	case 'c', 'b':
+	case 'b':
 		buf[0] = byte(arg.(int8))
 		rv = 1
 	case 'B':
@@ -97,9 +97,6 @@ func packarg(buf []byte, vfmt byte, arg interface{}, encLE bool) (int, error) {
 		xf := *(*uint64)(unsafe.Pointer(&f))
 		putBytes(buf, uint64(xf), encLE, 8)
 		rv = 8
-	case 'P':
-		// pointer type
-		return 0, errors.New("P format not implemented")
 	default:
 		return 0, errors.New("unknown format type " + string(vfmt))
 	}
@@ -152,6 +149,8 @@ func Pack(fmt string, buf []byte, args ...interface{}) error {
 
 		// handle those for which count has special or no meaning
 		switch fmtbyte {
+		case ' ', '\t', '\r', '\n':
+			continue
 		case '<':
 			encLE = true
 			continue
@@ -232,6 +231,8 @@ func Unpack(fmt string, buf []byte) ([]interface{}, error) {
 
 		// handle those for which count has special or no meaning
 		switch fmtbyte {
+		case ' ', '\t', '\r', '\n':
+			continue
 		case '<':
 			decLE = true
 			continue
@@ -260,7 +261,7 @@ func Unpack(fmt string, buf []byte) ([]interface{}, error) {
 			case 'x':
 				// skip pad bytes
 				boff++
-			case 'c', 'b':
+			case 'b':
 				args = append(args, int8(buf[boff]))
 				boff++
 			case 'B':
@@ -295,9 +296,6 @@ func Unpack(fmt string, buf []byte) ([]interface{}, error) {
 				xf := getBytes(buf[boff:], decLE, 8)
 				args = append(args, *(*float64)(unsafe.Pointer(&xf)))
 				boff += 8
-			case 'P':
-				// pointer type
-				return args, errors.New("P format not implemented")
 			default:
 				return args, errors.New("unknown format type " + string(fmtbyte))
 			}
