@@ -121,15 +121,13 @@ func TestStrings(t *testing.T) {
 }
 
 func TestMisc(t *testing.T) {
-	err := packAndCheck(t, "<cbB?4x>?Bbc", 256, []interface{}{
+	err := packAndCheck(t, "<bB?4x>?Bb", 256, []interface{}{
 		int8(1),
-		int8(2),
 		byte('?'),
 		bool(true),
 		bool(false),
 		byte('%'),
-		int8(3),
-		int8(4),
+		int8(2),
 	}, nil)
 	if err != nil {
 		t.Fatal(err)
